@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TrainingApp">
         <activity
-            android:name=".login.ui.LoginActivity"
+            android:name=".dashboard.DashboardActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
