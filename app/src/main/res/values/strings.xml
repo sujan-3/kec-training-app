@@ -3,4 +3,7 @@
     <string name="country_name">Nepal</string>
     <string name="username_hint">Enter username</string>
     <string name="password_hint">Enter password</string>
+    <string name="text_add">Add</string>
+    <string name="text_list">List</string>
+
 </resources>

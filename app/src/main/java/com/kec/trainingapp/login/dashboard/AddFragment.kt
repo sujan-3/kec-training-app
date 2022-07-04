@@ -1,15 +1,15 @@
-package com.kec.trainingapp.dashboard.fragment
+package com.kec.trainingapp.login.dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.kec.trainingapp.databinding.FragmentHomeBinding
+import com.kec.trainingapp.databinding.FragmentAddBinding
 
-class HomeFragment : Fragment() {
+class AddFragment : Fragment() {
 
-    lateinit var binding: FragmentHomeBinding
+    lateinit var binding: FragmentAddBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +20,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentHomeBinding.inflate(layoutInflater)
+        binding = FragmentAddBinding.inflate(layoutInflater);
         return binding.root
     }
 

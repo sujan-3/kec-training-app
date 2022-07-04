@@ -1,11 +1,13 @@
 package com.kec.trainingapp.login.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.kec.trainingapp.databinding.ActivityMainBinding
+import com.kec.trainingapp.login.dashboard.DashboardActivity
 import com.kec.trainingapp.login.vm.LoginViewModel
 
 class LoginActivity : AppCompatActivity() {
@@ -23,21 +25,11 @@ class LoginActivity : AppCompatActivity() {
             .get(LoginViewModel::class.java)
 
         binding!!.loginBtn?.setOnClickListener {
-            // Get username
-            val username = binding!!.usernameEt?.text.toString().trim()
+            val goToDashboardIntent =
+                Intent(this@LoginActivity,
+                DashboardActivity::class.java)
 
-            val validationMsg = viewmodel.checkValidation(username)
-
-            if (validationMsg.contentEquals(LoginViewModel.EMPTY_USERNAME)) {
-                binding!!.usernameEt?.setError(LoginViewModel.EMPTY_USERNAME)
-            } else if (validationMsg.contentEquals(LoginViewModel.INVALID_USERNAME)) {
-                binding!!.usernameEt?.setError(LoginViewModel.INVALID_USERNAME)
-
-            } else {
-                // Good to login
-
-            }
-
+            startActivity(goToDashboardIntent)
         }
     }
 
