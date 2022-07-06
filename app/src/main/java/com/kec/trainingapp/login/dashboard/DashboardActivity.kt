@@ -2,6 +2,7 @@ package com.kec.trainingapp.login.dashboard
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -11,6 +12,7 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationView
 import com.kec.trainingapp.R
 import com.kec.trainingapp.databinding.ActivityDashboardBinding
+import com.kec.trainingapp.login.Customer
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -37,6 +39,40 @@ class DashboardActivity : AppCompatActivity() {
                 return true
             }
         })
+
+    //    playingWithLists()
+
+      //  playingWithMap()
+
+        playingWithCustomerCollection();
+    }
+
+    private fun playingWithCustomerCollection() {
+        val customers = mutableListOf<Customer>();
+        customers.add(Customer(1, "Pratik"))
+        customers.add(Customer(2, "Pratik2"))
+        customers.add(Customer(3, "Pratik3"))
+        customers.add(Customer(4, "Pratik4"))
+        customers.add(Customer(5, "Pratik5"))
+
+        Log.d("COLLECTION", "customers: " + customers)
+
+        customers.removeAt(3)
+
+        Log.d("COLLECTION", "customers: " + customers)
+    }
+
+    private fun playingWithMap() {
+        val mutableMap = mutableMapOf<Int, String>()
+        mutableMap.put(1, "Thi sis one")
+
+        Log.d("COLLECTION", "mutableMap: " + mutableMap)
+    }
+
+    private fun playingWithLists()  {
+        var mutableList = mutableListOf<Int>(1, 3, 5)
+
+        Log.d("COLLECTION", "mutableList: " + mutableList)
     }
 
     private fun showListFragment() {
