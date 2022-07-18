@@ -1,22 +1,28 @@
 package com.kec.trainingapp.login.dashboard
 
-import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
+import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.navigation.NavigationView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.kec.trainingapp.R
+import com.kec.trainingapp.data.MyItem
 import com.kec.trainingapp.databinding.ActivityDashboardBinding
-import com.kec.trainingapp.login.Customer
 
 class DashboardActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityDashboardBinding
+
+    var myItems = mutableListOf<MyItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,65 +30,92 @@ class DashboardActivity : AppCompatActivity() {
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        showAddFragment()
+        myItems = getItems()
 
-        binding.btmNav.setOnNavigationItemSelectedListener(object : NavigationView.OnNavigationItemSelectedListener,
-            BottomNavigationView.OnNavigationItemSelectedListener {
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.adapter = MyItemAdapter(myItems, this@DashboardActivity)
+    }
 
-                if(item.itemId == R.id.nav_add){
-                    showAddFragment()
-                }else if(item.itemId == R.id.nav_list){
-                    showListFragment()
-                }
+    fun getItems(): MutableList<MyItem> {
+        var items = mutableListOf<MyItem>()
+        items.add(
+            MyItem(
+                1,
+                "Item 1",
+                "Desc 1",
+                "http://goo.gl/gEgYUd"
+            )
+        )
+        items.add(
+            MyItem(
+                1,
+                "Item 2",
+                "Desc 2",
+                "http://goo.gl/gEgYUd"
+            )
+        )
+         items.add(
+            MyItem(
+                1,
+                "Item 2",
+                "Desc 2",
+                "http://goo.gl/gEgYUd"
+            )
+        )
 
-                return true
+        return items
+    }
+
+    class MyItemAdapter(val items: MutableList<MyItem>, val context: Context) :
+        RecyclerView.Adapter<MyItemAdapter.MyItemViewHolder>() {
+
+        class MyItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val titleTv: TextView
+            val descTv: TextView
+            val icon: ImageView
+            val button: ImageButton
+
+            init {
+                titleTv = view.findViewById(R.id.title_tv)
+                descTv = view.findViewById(R.id.desc_tv)
+                icon = view.findViewById(R.id.iv)
+                button = view.findViewById(R.id.btn)
             }
-        })
+        }
 
-    //    playingWithLists()
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyItemViewHolder {
+            return MyItemViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
+            )
+        }
 
-      //  playingWithMap()
+        override fun onBindViewHolder(holder: MyItemViewHolder, position: Int) {
+            val myItem = items[position];
 
-        playingWithCustomerCollection();
-    }
+            holder.titleTv.setText(myItem.title)
 
-    private fun playingWithCustomerCollection() {
-        val customers = mutableListOf<Customer>();
-        customers.add(Customer(1, "Pratik"))
-        customers.add(Customer(2, "Pratik2"))
-        customers.add(Customer(3, "Pratik3"))
-        customers.add(Customer(4, "Pratik4"))
-        customers.add(Customer(5, "Pratik5"))
+            holder.descTv.setText(myItem.desc)
 
-        Log.d("COLLECTION", "customers: " + customers)
+            Log.d("MyItemAdapter", "URL: " + myItem.icon)
 
-        customers.removeAt(3)
+            Glide.with(context).load(myItem.icon).into(holder.icon)
 
-        Log.d("COLLECTION", "customers: " + customers)
-    }
+            /*holder.button.setOnClickListener {
+                Toast.makeText(context, myItem.desc, Toast.LENGTH_SHORT).show()
+            }*/
 
-    private fun playingWithMap() {
-        val mutableMap = mutableMapOf<Int, String>()
-        mutableMap.put(1, "Thi sis one")
+            holder.button.setOnClickListener(object: View.OnClickListener{
+                override fun onClick(v: View?) {
+                    Log.d("MyItemAdapter", "onClick() " + myItem.desc)
 
-        Log.d("COLLECTION", "mutableMap: " + mutableMap)
-    }
+                    Toast.makeText(context, myItem.desc, Toast.LENGTH_SHORT).show()
+                }
+            })
 
-    private fun playingWithLists()  {
-        var mutableList = mutableListOf<Int>(1, 3, 5)
+        }
 
-        Log.d("COLLECTION", "mutableList: " + mutableList)
-    }
-
-    private fun showListFragment() {
-        val listFragment = ListFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.container, listFragment).commit()
-
-    }
-
-    private fun showAddFragment() {
-        val addFragment = AddFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.container, addFragment).commit()
+        override fun getItemCount(): Int {
+            return items.size
+        }
     }
 }
