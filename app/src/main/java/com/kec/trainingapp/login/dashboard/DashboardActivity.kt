@@ -24,6 +24,8 @@ class DashboardActivity : AppCompatActivity() {
 
     var myItems = mutableListOf<MyItem>()
 
+    lateinit var myItemAdapter: MyItemAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,7 +35,21 @@ class DashboardActivity : AppCompatActivity() {
         myItems = getItems()
 
         binding.rv.layoutManager = LinearLayoutManager(this)
-        binding.rv.adapter = MyItemAdapter(myItems, this@DashboardActivity)
+        myItemAdapter = MyItemAdapter(myItems, this@DashboardActivity);
+        binding.rv.adapter = myItemAdapter
+
+        binding.save.setOnClickListener {
+            val title = binding.titleEt.text.toString().trim()
+            val desc = binding.descEt.text.toString().trim()
+
+            val myItem = MyItem(3, title, desc, "http://goo.gl/gEgYUd")
+            myItemAdapter.addData(myItem)
+        }
+        binding.delete.setOnClickListener {
+            val position = binding.positionEt.text.toString().trim()
+
+            myItemAdapter.deleteData(position)
+        }
     }
 
     fun getItems(): MutableList<MyItem> {
@@ -54,7 +70,7 @@ class DashboardActivity : AppCompatActivity() {
                 "http://goo.gl/gEgYUd"
             )
         )
-         items.add(
+        items.add(
             MyItem(
                 1,
                 "Item 2",
@@ -90,7 +106,7 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyItemViewHolder, position: Int) {
-            val myItem = items[position];
+            val myItem = items[position]
 
             holder.titleTv.setText(myItem.title)
 
@@ -104,7 +120,7 @@ class DashboardActivity : AppCompatActivity() {
                 Toast.makeText(context, myItem.desc, Toast.LENGTH_SHORT).show()
             }*/
 
-            holder.button.setOnClickListener(object: View.OnClickListener{
+            holder.button.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(v: View?) {
                     Log.d("MyItemAdapter", "onClick() " + myItem.desc)
 
@@ -116,6 +132,25 @@ class DashboardActivity : AppCompatActivity() {
 
         override fun getItemCount(): Int {
             return items.size
+        }
+
+        fun addData(myItem: MyItem) {
+            items.add(myItem)
+
+            notifyItemInserted(items.size - 1)
+        }
+
+        fun deleteData(position: String) {
+            val pos = position.toInt()
+
+            if (pos >= items.size) {
+
+            } else {
+                items.removeAt(pos)
+
+                notifyItemRemoved(pos)
+            }
+
         }
     }
 }
