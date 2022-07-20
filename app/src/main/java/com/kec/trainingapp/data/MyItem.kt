@@ -1,3 +1,13 @@
 package com.kec.trainingapp.data
 
-data class MyItem(val id: Int, val title: String, val desc: String, val icon: String)
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class MyItem(
+    @PrimaryKey val id: Int,
+    @ColumnInfo val title: String,
+    @ColumnInfo val desc: String,
+    @ColumnInfo val icon: String
+)

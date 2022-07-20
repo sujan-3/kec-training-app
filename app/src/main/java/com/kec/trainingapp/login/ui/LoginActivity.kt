@@ -1,5 +1,6 @@
 package com.kec.trainingapp.login.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -21,13 +22,30 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        val name = sharedPref.getString("uname", "")
+        if(!name.isNullOrEmpty()){
+            binding?.usernameEt?.setText(name)
+        }
+
         viewmodel = ViewModelProvider(this)
             .get(LoginViewModel::class.java)
 
         binding!!.loginBtn?.setOnClickListener {
+            val username = binding!!.usernameEt?.text.toString().trim()
+            if (username.isNotEmpty()) {
+                val sharedPref = getPreferences(Context.MODE_PRIVATE)
+                val editor = sharedPref.edit()
+                editor.putString("uname", username)
+                editor.apply()
+            }
+
+
             val goToDashboardIntent =
-                Intent(this@LoginActivity,
-                DashboardActivity::class.java)
+                Intent(
+                    this@LoginActivity,
+                    DashboardActivity::class.java
+                )
 
             startActivity(goToDashboardIntent)
         }
