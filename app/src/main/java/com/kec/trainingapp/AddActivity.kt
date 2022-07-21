@@ -25,7 +25,8 @@ class AddActivity : AppCompatActivity() {
                 applicationContext,
                 AppDatabase::class.java,
                 "kec-db"
-            ).allowMainThreadQueries()
+            )
+                .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build()
 
