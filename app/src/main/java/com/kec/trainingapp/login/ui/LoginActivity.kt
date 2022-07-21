@@ -48,6 +48,7 @@ class LoginActivity : AppCompatActivity() {
                 )
 
             startActivity(goToDashboardIntent)
+            finish()
         }
     }
 

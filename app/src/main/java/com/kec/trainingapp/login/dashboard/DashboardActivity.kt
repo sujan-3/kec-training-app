@@ -1,6 +1,7 @@
 package com.kec.trainingapp.login.dashboard
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,9 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.bumptech.glide.Glide
-import com.kec.trainingapp.AppDatabase
+import com.kec.trainingapp.AddActivity
 import com.kec.trainingapp.MyItemClickListener
 import com.kec.trainingapp.R
 import com.kec.trainingapp.data.MyItem
@@ -41,64 +41,15 @@ class DashboardActivity : AppCompatActivity() {
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        myItems = getItems()
-
         binding.rv.layoutManager = LinearLayoutManager(this)
         myItemAdapter = MyItemAdapter(myItems, this@DashboardActivity, itemClickListener)
         binding.rv.adapter = myItemAdapter
 
-        binding.save.setOnClickListener {
-            val title = binding.titleEt.text.toString().trim()
-            val desc = binding.descEt.text.toString().trim()
-
-            val myItem = MyItem(1, title, desc, "http://goo.gl/gEgYUd")
-            //  myItemAdapter.addData(myItem)
-
-            val db = Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java,
-                "kec-db"
-            ).allowMainThreadQueries().build()
-
-            db.myItemDao().add(myItem)
-        }
-        binding.delete.setOnClickListener {
-            val position = binding.positionEt.text.toString().trim()
-
-            myItemAdapter.deleteData(position)
+        binding.fab.setOnClickListener {
+            val goToAddActivity = Intent(this@DashboardActivity, AddActivity::class.java)
+            startActivity(goToAddActivity)
         }
     }
-
-    fun getItems(): MutableList<MyItem> {
-        var items = mutableListOf<MyItem>()
-        items.add(
-            MyItem(
-                1,
-                "Item 1",
-                "Desc 1",
-                "http://goo.gl/gEgYUd"
-            )
-        )
-        items.add(
-            MyItem(
-                1,
-                "Item 2",
-                "Desc 2",
-                "http://goo.gl/gEgYUd"
-            )
-        )
-        items.add(
-            MyItem(
-                1,
-                "Item 2",
-                "Desc 2",
-                "http://goo.gl/gEgYUd"
-            )
-        )
-
-        return items
-    }
-
 }
 
 class MyItemAdapter(
@@ -139,10 +90,6 @@ class MyItemAdapter(
 
         Glide.with(context).load(myItem.icon).into(holder.icon)
 
-        /*holder.button.setOnClickListener {
-            Toast.makeText(context, myItem.desc, Toast.LENGTH_SHORT).show()
-        }*/
-
         holder.button.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 Log.d("MyItemAdapter", "onClick() " + myItem.desc)
@@ -169,18 +116,6 @@ class MyItemAdapter(
         notifyItemInserted(items.size - 1)
     }
 
-    fun deleteData(position: String) {
-        val pos = position.toInt()
-
-        if (pos >= items.size) {
-
-        } else {
-            items.removeAt(pos)
-
-            notifyItemRemoved(pos)
-        }
-
-    }
 }
 
 
