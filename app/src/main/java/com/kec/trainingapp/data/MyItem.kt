@@ -1,5 +1,6 @@
 package com.kec.trainingapp.data
 
+import androidx.annotation.Nullable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,5 +10,7 @@ data class MyItem(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo val title: String,
     @ColumnInfo val desc: String,
-    @ColumnInfo val icon: String
+    @ColumnInfo val icon: String,
+    @ColumnInfo val rating: Int
+
 )

@@ -1,5 +1,6 @@
 package com.kec.trainingapp.login.dashboard
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,11 +12,14 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.kec.trainingapp.AddActivity
+import com.kec.trainingapp.AppDatabase
 import com.kec.trainingapp.MyItemClickListener
 import com.kec.trainingapp.R
 import com.kec.trainingapp.data.MyItem
@@ -35,11 +39,33 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
+    var itemAddActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+
+            if (activityResult.resultCode == Activity.RESULT_OK) {
+                // fetch from db
+                Log.d("RESULT", "result is ok, fetch data from db")
+            } else {
+                Log.d("RESULT", "result is cancelled, don't fetch data from db")
+            }
+        }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "kec-db"
+        )
+            .allowMainThreadQueries()
+            .build()
+
+        myItems = db.myItemDao().fetchAllItems()
 
         binding.rv.layoutManager = LinearLayoutManager(this)
         myItemAdapter = MyItemAdapter(myItems, this@DashboardActivity, itemClickListener)
@@ -47,9 +73,24 @@ class DashboardActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener {
             val goToAddActivity = Intent(this@DashboardActivity, AddActivity::class.java)
-            startActivity(goToAddActivity)
+          //  startActivityForResult(goToAddActivity, 1001)
+            itemAddActivityLauncher.launch(goToAddActivity)
         }
     }
+
+   /* override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 1001) {
+            if (resultCode == Activity.RESULT_OK) {
+                // fetch from db
+                Log.d("RESULT", "result is ok, fetch data from db")
+            } else {
+                Log.d("RESULT", "result is cancelled, don't fetch data from db")
+            }
+        }
+    }*/
+
 }
 
 class MyItemAdapter(
