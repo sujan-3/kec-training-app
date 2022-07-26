@@ -24,6 +24,11 @@ import com.kec.trainingapp.MyItemClickListener
 import com.kec.trainingapp.R
 import com.kec.trainingapp.data.MyItem
 import com.kec.trainingapp.databinding.ActivityDashboardBinding
+import com.kec.trainingapp.network.Api
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -65,7 +70,11 @@ class DashboardActivity : AppCompatActivity() {
             .allowMainThreadQueries()
             .build()
 
-        myItems = db.myItemDao().fetchAllItems()
+        // Fetching data from db
+        // myItems = db.myItemDao().fetchAllItems()
+
+        // Fetching data from nw
+        fetchData();
 
         binding.rv.layoutManager = LinearLayoutManager(this)
         myItemAdapter = MyItemAdapter(myItems, this@DashboardActivity, itemClickListener)
@@ -73,23 +82,41 @@ class DashboardActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener {
             val goToAddActivity = Intent(this@DashboardActivity, AddActivity::class.java)
-          //  startActivityForResult(goToAddActivity, 1001)
+            //  startActivityForResult(goToAddActivity, 1001)
             itemAddActivityLauncher.launch(goToAddActivity)
         }
     }
 
-   /* override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun fetchData() {
+        Log.d("API", "fetchData")
 
-        if (requestCode == 1001) {
-            if (resultCode == Activity.RESULT_OK) {
-                // fetch from db
-                Log.d("RESULT", "result is ok, fetch data from db")
-            } else {
-                Log.d("RESULT", "result is cancelled, don't fetch data from db")
+        Api.apiService.getItems().enqueue(object : retrofit2.Callback<List<MyItem>> {
+            override fun onFailure(call: retrofit2.Call<List<MyItem>>, t: Throwable) {
+               Log.e("API", "onError() " + t.localizedMessage)
             }
-        }
-    }*/
+
+            override fun onResponse(
+                call: retrofit2.Call<List<MyItem>>,
+                response: retrofit2.Response<List<MyItem>>
+            ) {
+                Log.d("API", "onResponse() " + response.body())
+            }
+
+        })
+    }
+
+    /* override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+         super.onActivityResult(requestCode, resultCode, data)
+
+         if (requestCode == 1001) {
+             if (resultCode == Activity.RESULT_OK) {
+                 // fetch from db
+                 Log.d("RESULT", "result is ok, fetch data from db")
+             } else {
+                 Log.d("RESULT", "result is cancelled, don't fetch data from db")
+             }
+         }
+     }*/
 
 }
 
