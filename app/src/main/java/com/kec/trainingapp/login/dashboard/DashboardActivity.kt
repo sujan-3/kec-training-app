@@ -73,9 +73,6 @@ class DashboardActivity : AppCompatActivity() {
         // Fetching data from db
         // myItems = db.myItemDao().fetchAllItems()
 
-        // Fetching data from nw
-        fetchData();
-
         binding.rv.layoutManager = LinearLayoutManager(this)
         myItemAdapter = MyItemAdapter(myItems, this@DashboardActivity, itemClickListener)
         binding.rv.adapter = myItemAdapter
@@ -85,6 +82,9 @@ class DashboardActivity : AppCompatActivity() {
             //  startActivityForResult(goToAddActivity, 1001)
             itemAddActivityLauncher.launch(goToAddActivity)
         }
+
+        // Fetching data from nw
+        fetchData()
     }
 
     private fun fetchData() {
@@ -92,16 +92,17 @@ class DashboardActivity : AppCompatActivity() {
 
         Api.apiService.getItems().enqueue(object : retrofit2.Callback<List<MyItem>> {
             override fun onFailure(call: retrofit2.Call<List<MyItem>>, t: Throwable) {
-               Log.e("API", "onError() " + t.localizedMessage)
+                Log.e("API", "onError() " + t.localizedMessage)
             }
 
             override fun onResponse(
                 call: retrofit2.Call<List<MyItem>>,
                 response: retrofit2.Response<List<MyItem>>
             ) {
+                myItemAdapter.addAllData(response.body()?.toMutableList())
+
                 Log.d("API", "onResponse() " + response.body())
             }
-
         })
     }
 
@@ -182,6 +183,15 @@ class MyItemAdapter(
         items.add(myItem)
 
         notifyItemInserted(items.size - 1)
+    }
+
+    fun addAllData(myItems: MutableList<MyItem>?) {
+        if (myItems == null)
+            return
+
+        items.addAll(myItems)
+
+        notifyDataSetChanged()
     }
 
 }
