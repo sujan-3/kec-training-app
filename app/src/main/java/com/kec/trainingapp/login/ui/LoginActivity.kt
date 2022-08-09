@@ -36,25 +36,25 @@ class LoginActivity : AppCompatActivity() {
             val username = binding!!.usernameEt?.text.toString().trim()
 
             if(Validator().validateUsername(username)){
+                if (username.isNotEmpty()) {
+                    val sharedPref = getPreferences(Context.MODE_PRIVATE)
+                    val editor = sharedPref.edit()
+                    editor.putString("uname", username)
+                    editor.apply()
+                }
 
+
+                val goToDashboardIntent =
+                    Intent(
+                        this@LoginActivity,
+                        DashboardActivity::class.java
+                    )
+
+                startActivity(goToDashboardIntent)
+                finish()
             }
 
-            /*if (username.isNotEmpty()) {
-                val sharedPref = getPreferences(Context.MODE_PRIVATE)
-                val editor = sharedPref.edit()
-                editor.putString("uname", username)
-                editor.apply()
-            }
 
-
-            val goToDashboardIntent =
-                Intent(
-                    this@LoginActivity,
-                    DashboardActivity::class.java
-                )
-
-            startActivity(goToDashboardIntent)
-            finish()*/
         }
     }
 
