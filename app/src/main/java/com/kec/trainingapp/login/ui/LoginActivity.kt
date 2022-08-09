@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.kec.trainingapp.data.Validator
 import com.kec.trainingapp.databinding.ActivityMainBinding
 import com.kec.trainingapp.login.dashboard.DashboardActivity
 import com.kec.trainingapp.login.vm.LoginViewModel
@@ -33,7 +34,12 @@ class LoginActivity : AppCompatActivity() {
 
         binding!!.loginBtn?.setOnClickListener {
             val username = binding!!.usernameEt?.text.toString().trim()
-            if (username.isNotEmpty()) {
+
+            if(Validator().validateUsername(username)){
+
+            }
+
+            /*if (username.isNotEmpty()) {
                 val sharedPref = getPreferences(Context.MODE_PRIVATE)
                 val editor = sharedPref.edit()
                 editor.putString("uname", username)
@@ -48,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
                 )
 
             startActivity(goToDashboardIntent)
-            finish()
+            finish()*/
         }
     }
 

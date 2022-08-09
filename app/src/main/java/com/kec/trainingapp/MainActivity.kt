@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                     activeFragment = listFragment
                 }
             }
+
             // It will help to replace the
             // one fragment to other.
             true
